@@ -13,10 +13,13 @@ import org.springframework.web.client.RestTemplate;
 import com.microservicios2.clase1.galleryservice.model.Gallery;
 import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
+import lombok.extern.slf4j.Slf4j;
+
 
 
 @RestController
 @RequestMapping("/")
+@Slf4j
 public class ImageController {
 	//private static final Logger LOGGER = LoggerFactory.getLogger(ImageController.class);
 	
@@ -37,7 +40,7 @@ public class ImageController {
 	@HystrixCommand(fallbackMethod = "fallback")
 	@RequestMapping("/{id}")
 	public Gallery getGallery(@PathVariable final int id) {
-		//LOGGER.info("Creating gallery object ... ");
+		log.info("Creating gallery object ... ");
 		
 		// create gallery object
 		Gallery gallery = new Gallery();
@@ -47,7 +50,7 @@ public class ImageController {
 		// @SuppressWarnings("unchecked")    // we'll throw an exception from image service to simulate a failure
 		List<Object> images = restTemplate.getForObject("http://image-service/images/", List.class);
 		gallery.setImages(images);
-	
+		
 		return gallery;
 	}
 	
